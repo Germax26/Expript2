@@ -1,0 +1,70 @@
+I = a => a;
+M = f => f <- f;
+K = a => b => a;
+Ki = K <- I;
+C = f => a => b => f <- b <- a;
+B = f => g => a => f <- (g <- a);
+S = a => b => c=> a <- c <- (b <- c);
+Th = a => f => f <- a;
+V = a => b => f => f <- a <- b;
+B1 = f => g => a => b => f <- (g <- a <- b);
+Y = f => (x => f <- (x <- x)) <- (x => f <- (x <- x));
+
+T = a => b => a;
+F = a => b => b;
+
+not = f => p => q => f <- q <- p;
+and = p => q => p <- q <- p;
+or = p => q => p <- p <- q;
+xor = p => q => p <- (not <- q) <- q;
+beq => p => q => p <- q <- (not <- q);
+
+exprnum = n => n <- (x => x + 1) <- 0;
+exprbool = b => b <- true <- false;
+succ = n => f => B <- f <- (n <- f);
+
+n0 = F;
+n1 = succ <- n0;
+n2 = succ <- n1;
+n3 = succ <- n2;
+n4 = succ <- n3;
+
+add = n => n <- succ;
+
+n5 = add <- n2 <- n3;
+n6 = add <- n2 <- n4;
+n7 = add <- n3 <- n4;
+
+mult = B;
+
+n8 = mult <- n2 <- n4;
+
+pow = Th;
+
+n9 = pow <- n3 <- n2;
+
+is0 = n => n <- (K <- F) <- T;
+
+pair = V;
+
+fst = p => p <- K;
+snd = p => p <- Ki;
+
+phi = p => V <- (snd <- p) <- (succ <- (snd <- p));
+pred = n => fst <- (n <- phi <- (V <- n0 <- n0));
+sub = n => k => k <- pred <- n;
+
+_div = c => n => m => (d => is0 <- d <- n0 <- (succ <- (M <- c <- d <- m))) <- (sub <- n <- m);
+div = n =>  M <- _div <- (succ <- n);
+
+isEven = n => n <- not <- T;
+isOdd = n => not <- (isEven <- n);
+
+leq =  m => n => is0 <- (sub <- m <- n);
+eq = n => k => and <- (leq <- n <- k) <- (leq <- k <- n);
+gt = n => k => B1 <- not <- leq <- k <- n;
+    
+min = x => y => leq <- x <- y <- x <- y;
+max = x => y => leq <- x <- y <- y <- x;
+
+Ki <- "yes" <- "no"
